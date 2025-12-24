@@ -127,11 +127,11 @@ app.get('/portfolio', async (req, res) => {
 
     res.json(tableData);
   } catch (err) {
-    console.error('Error scraping Trendlyne:', err.message);
-    res.status(500).json({ error: 'Failed to scrape data' });
+    console.error('Error loading Trendlyne:', err.message);
+    res.status(500).json({ error: 'Failed to load data' });
   }
 });
 
 // IMPORTANT: export the app (no app.listen, Vercel will handle the server)
-module.exports = app;
+module.exports = (req, res) => app(req, res);
 
