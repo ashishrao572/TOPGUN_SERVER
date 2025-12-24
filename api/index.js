@@ -1,7 +1,8 @@
 // api/index.js - CommonJS export for Vercel
 const express = require('express');
 const cors = require('cors');
-const puppeteer = require('puppeteer');
+const chromium = require('@sparticuz/chrome-aws-lambda');
+const puppeteer = require('puppeteer-core');
 const FinancialPeriod = require('./FinancialPeriod.js');
 
 const { getCurrentIndianQuarter, getPreviousIndianQuarter } = FinancialPeriod;
@@ -105,8 +106,10 @@ app.get('/portfolio', async (req, res) => {
     ];
 
     const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: chromium.args.concat(['--disable-dev-shm-usage']),
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath || process.env.CHROME_EXECUTABLE_PATH,
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();
